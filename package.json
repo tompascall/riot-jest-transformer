@@ -4,7 +4,8 @@
   "description": "Jest transformer for testing riot tags",
   "main": "src/main.js",
   "scripts": {
-    "test": "jest --config jest.config.js --no-cache"
+    "test": "jest --config jest.config.js --no-cache",
+    "test:watch": "jest --watch --config jest.config.js --no-cache"
   },
   "repository": {
     "type": "git",
