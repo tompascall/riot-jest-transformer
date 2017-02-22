@@ -1,0 +1,28 @@
+{
+  "name": "riot-jest-transformer",
+  "version": "1.0.0",
+  "description": "Jest transformer for testing riot tags",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --config jest.config.js --no-cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tompascall/riot-jest-transformer.git"
+  },
+  "keywords": [
+    "utility",
+    "jest",
+    "testing",
+    "tool",
+    "transformer",
+    "riotjs",
+    "tdd"
+  ],
+  "author": "tompascall",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tompascall/riot-jest-transformer/issues"
+  },
+  "homepage": "https://github.com/tompascall/riot-jest-transformer#readme"
+}
