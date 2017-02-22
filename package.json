@@ -2,7 +2,7 @@
   "name": "riot-jest-transformer",
   "version": "1.0.0",
   "description": "Jest transformer for testing riot tags",
-  "main": "index.js",
+  "main": "src/main.js",
   "scripts": {
     "test": "jest --config jest.config.js --no-cache"
   },
@@ -24,5 +24,14 @@
   "bugs": {
     "url": "https://github.com/tompascall/riot-jest-transformer/issues"
   },
-  "homepage": "https://github.com/tompascall/riot-jest-transformer#readme"
+  "homepage": "https://github.com/tompascall/riot-jest-transformer#readme",
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-jest": "^19.0.0",
+    "babel-preset-es2015-riot": "^1.1.0",
+    "jest": "^19.0.0"
+  },
+  "dependencies": {
+    "riot": "^3.3.1"
+  }
 }
