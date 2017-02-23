@@ -1,4 +1,5 @@
-import riot from 'riot';
+const riot = require('riot');
 
-exports.process = function () {
+exports.process = function (source) {
+  riot.compile(source);
 }

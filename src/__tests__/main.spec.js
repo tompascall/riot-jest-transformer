@@ -1,5 +1,5 @@
 import { process } from '../main';
-import riot from 'riot';
+const riot = require('riot');
 
 const hello = `
     <hello>
@@ -17,7 +17,7 @@ describe('riot-jest-transformer', function() {
         console.log(typeof riot, 'X'.repeat(100));
         spyOn(riot, 'compile');
         process(hello);
-        expect(riot.compile).toHaveBeenCalledWith(source);
+        expect(riot.compile).toHaveBeenCalledWith(hello);
     });
 });
 
