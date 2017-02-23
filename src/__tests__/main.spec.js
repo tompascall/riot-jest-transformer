@@ -1,5 +1,5 @@
 import { process } from '../main';
-const riot = require('riot');
+import * as riot from 'riot';
 
 const hello = `
     <hello>
