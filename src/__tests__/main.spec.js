@@ -13,11 +13,9 @@ describe('riot-jest-transformer', function() {
      expect(typeof process).toBe('function');  
     }); 
 
-    it('should call riot.compile with the first param (ie. with source)', function() {
-        console.log(typeof riot, 'X'.repeat(100));
-        spyOn(riot, 'compile');
-        process(hello);
-        expect(riot.compile).toHaveBeenCalledWith(hello);
+    it('gives back the compiled tag', function() {
+        console.log(process(hello).search(/riot.tag2\(['|"]hello['|"]/));
+        expect(process(hello).search(/riot.tag2\(['|"]hello['|"]/)).not.toEqual(-1);
     });
 });
 

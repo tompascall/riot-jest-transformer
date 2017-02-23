@@ -1,5 +1,5 @@
 const riot = require('riot');
 
 exports.process = function (source) {
-  riot.compile(source);
+  return riot.compile(source);
 }
