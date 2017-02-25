@@ -81,6 +81,21 @@ describe('riot-jest-transformer', function() {
     });
   });
 
+  describe('isertRiot', () => {
+    it('should insert riot dependency into compiled tag', () => {
+      const hello2 = `
+          import { transform } from 'babel-core';
+          <hello>
+              <h1>{ opts.name }</h1>
+          </hello>
+      `;
+
+      let compiled = transformer.getCompiled(hello2);
+      let completed = transformer.insertRiot(compiled);
+      expect(completed.indexOf('const riot = require("riot")')).not.toEqual(-1);
+    });
+  });
+
   describe('process', () => {
     it('should be a function', function() {
         expect(typeof process).toBe('function');
@@ -94,6 +109,9 @@ describe('riot-jest-transformer', function() {
       spyOn(transformer, 'getConfig');
       process(hello, 'fakeFile');
       expect(transformer.getConfig).toHaveBeenCalledWith({ filename: 'fakeFile'});
+    });
+
+    xit('should insert riot import into transformed tag in order to be able to run riot tag', () => {
     });
   });
 
