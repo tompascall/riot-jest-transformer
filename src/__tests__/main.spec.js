@@ -14,6 +14,27 @@ const configPath = `${path.resolve('.riot-jest-tranformer')}`;
 
 describe('riot-jest-transformer', function() {
 
+  describe('getCompiled', () => {
+    it('gives back the compiled tag', function() {
+        expect(transformer.getCompiled(hello).search(/riot.tag2\(['|"]hello['|"]/)).not.toEqual(-1);
+    });
+  });
+
+  describe('isertRiot', () => {
+    it('should insert riot dependency into compiled tag', () => {
+      const hello2 = `
+          import { someMethod } from 'someModule';
+          <hello>
+              <h1>{ opts.name }</h1>
+          </hello>
+      `;
+
+      let compiled = transformer.getCompiled(hello2);
+      let completed = transformer.insertRiot(compiled);
+      expect(completed.indexOf('const riot = require("riot")')).not.toEqual(-1);
+    });
+  });
+
   describe('getDefaultConfig', () => {
     it('should use babel transformer optioned with filename', () => {
       const config = transformer.getDefaultConfig({ filename: 'fakeFile'});
@@ -31,10 +52,10 @@ describe('riot-jest-transformer', function() {
 
       if (fs.existsSync(configPath)) {
         fs.unlinkSync(configPath);
-        expect(callGetConfig).not.toThrow();
-        const config = transformer.getConfig({ filename: 'fakeFile' });
-        expect(config).toEqual(transformer.getDefaultConfig({ filename: 'fakeFile' }));
       }
+      expect(callGetConfig).not.toThrow();
+      const config = transformer.getConfig({ filename: 'fakeFile' });
+      expect(config).toEqual(transformer.getDefaultConfig({ filename: 'fakeFile' }));
     });
 
     it('should use .riot-jest-transformer file as config if it exists', () => {
@@ -46,6 +67,7 @@ describe('riot-jest-transformer', function() {
 
       fs.writeFileSync(configPath, JSON.stringify(config), {encoding: 'utf8'});
       expect(transformer.getConfig({ filename: 'fakeFile'})).toEqual(config);
+      fs.unlinkSync(configPath);
     });
   });
 
@@ -81,28 +103,27 @@ describe('riot-jest-transformer', function() {
     });
   });
 
-  describe('isertRiot', () => {
-    it('should insert riot dependency into compiled tag', () => {
-      const hello2 = `
-          import { transform } from 'babel-core';
-          <hello>
-              <h1>{ opts.name }</h1>
-          </hello>
-      `;
-
-      let compiled = transformer.getCompiled(hello2);
-      let completed = transformer.insertRiot(compiled);
-      expect(completed.indexOf('const riot = require("riot")')).not.toEqual(-1);
-    });
-  });
-
   describe('process', () => {
+    let compiled,
+      completedWithRiot,
+      config,
+      transformed;
+
     it('should be a function', function() {
         expect(typeof process).toBe('function');
     });
 
-    it('gives back the compiled tag', function() {
-        expect(process(hello).search(/riot.tag2\(['|"]hello['|"]/)).not.toEqual(-1);
+    it('should call getCompiled with tag source', () => {
+      spyOn(transformer, 'getCompiled').and.callThrough();
+      process(hello, 'fakeFile');
+      expect(transformer.getCompiled).toHaveBeenCalledWith(hello);
+    });
+
+    it('should call insertRiot with compiled tag', () => {
+      compiled = transformer.getCompiled(hello);
+      spyOn(transformer, 'insertRiot').and.callThrough();
+      process(hello, 'fakeFile');
+      expect(transformer.insertRiot).toHaveBeenCalledWith(compiled);
     });
 
     it('should call getConfig with the second argument (provided by jest as filename)', () => {
@@ -111,9 +132,19 @@ describe('riot-jest-transformer', function() {
       expect(transformer.getConfig).toHaveBeenCalledWith({ filename: 'fakeFile'});
     });
 
-    xit('should insert riot import into transformed tag in order to be able to run riot tag', () => {
+    it('should call getTreansformed with compiled tag and config', () => {
+      completedWithRiot = transformer.insertRiot(compiled);
+      config = transformer.getConfig({ filename: 'fakeFile' });
+
+      spyOn(transformer, 'getTransformed').and.callThrough();
+      process(hello, 'fakeFile');
+      expect(transformer.getTransformed).toHaveBeenCalledWith({ compiled: completedWithRiot, ...config});
+    });
+
+    it('returns code attribute of transformed tag', () => {
+      transformed = transformer.getTransformed({ compiled: completedWithRiot, ...config});
+      expect(process(hello, 'fakeFile')).toEqual(transformed.code);
     });
   });
-
 });
 

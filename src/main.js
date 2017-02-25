@@ -3,6 +3,8 @@ const { transform } = require('babel-core');
 const path = require('path');
 const fs = require('fs');
 const CONFIG_PATH = `${path.resolve('.riot-jest-tranformer')}`;
+const RIOT_PROCESSOR = 'riot.tag2';
+
 const transformer = {
   getCompiled (source) {
     return riot.compile(source);
@@ -10,7 +12,7 @@ const transformer = {
 
   insertRiot (compiled) {
     let completed;
-    const [ header, tag ] = compiled.split('riot.tag2');
+    const [ header, tag ] = compiled.split(RIOT_PROCESSOR);
     if (header.search(/from\s*['|"]riot['|"]/) == -1 &&
       header.search(/require\s*\(['|"]riot['|"]\)/)
     ) {
@@ -38,20 +40,19 @@ const transformer = {
   },
 
   getTransformed ({ compiled, transformer, method, args = [] } = {}) {
-    args.unshift(compiled);
     if (transformer && method) {
       const transformerByParam = require(transformer);
-      return transformerByParam[method](...args);
+      return transformerByParam[method](compiled, ...args);
     }
-    return transform(...args);
+    return transform(compiled, ...args);
   }
 }
 
 exports.process = function (source, filename) {
   let compiled = transformer.getCompiled(source);
-  let appendedCompiled = transformer.insertRiot(compiled);
+  let completedWithRiot = transformer.insertRiot(compiled);
   const config = transformer.getConfig({ filename });
-  let transformed = transformer.getTransformed({ compiled: appendedCompiled, ...config });
+  let transformed = transformer.getTransformed({ compiled: completedWithRiot, ...config });
   return transformed.code;
 }
 
