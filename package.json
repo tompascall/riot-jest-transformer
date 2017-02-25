@@ -29,6 +29,7 @@
   "devDependencies": {
     "babel-core": "^6.23.1",
     "babel-jest": "^19.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2015-riot": "^1.1.0",
     "jest": "^19.0.0"
   },
