@@ -10,7 +10,7 @@ const hello = `
     </hello>
 `;
 
-const configPath = `${path.resolve('.riot-jest-tranformer')}`;
+const configPath = `${path.resolve('.riot-jest-transformer')}`;
 
 describe('riot-jest-transformer', function() {
 

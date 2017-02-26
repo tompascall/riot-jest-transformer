@@ -2,7 +2,7 @@ const riot = require('riot');
 const { transform } = require('babel-core');
 const path = require('path');
 const fs = require('fs');
-const CONFIG_PATH = `${path.resolve('.riot-jest-tranformer')}`;
+const CONFIG_PATH = `${path.resolve('.riot-jest-transformer')}`;
 const RIOT_PROCESSOR = 'riot.tag2';
 
 const transformer = {
@@ -34,7 +34,11 @@ const transformer = {
   getConfig ({ filename = '' } = {}) {
     let config;
     if (fs.existsSync(CONFIG_PATH)) {
-      return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
+      config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+      if (Array.isArray(config.args)) {
+        config.args[0].filename = filename;
+      }
+      return config;
     }
     else return this.getDefaultConfig({ filename });
   },
@@ -52,7 +56,8 @@ exports.process = function (source, filename) {
   let compiled = transformer.getCompiled(source);
   let completedWithRiot = transformer.insertRiot(compiled);
   const config = transformer.getConfig({ filename });
-  let transformed = transformer.getTransformed(Object.assign({}, { compiled: completedWithRiot }, config));
+  let composedConfig = Object.assign({}, { compiled: completedWithRiot }, config);
+  let transformed = transformer.getTransformed(composedConfig);
   return transformed.code;
 }
 
