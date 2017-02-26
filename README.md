@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.org/tompascall/riot-jest-transformer.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/tompascall/riot-jest-transformer/badge.svg?branch=master)](https://coveralls.io/github/tompascall/riot-jest-transformer?branch=master)
+![Build Status](https://travis-ci.org/tompascall/riot-jest-transformer.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/tompascall/riot-jest-transformer/badge.svg?branch=master)](https://coveralls.io/github/tompascall/riot-jest-transformer?branch=master)
 
 ## riot-jest-transformer
 
