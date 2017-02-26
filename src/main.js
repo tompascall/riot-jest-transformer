@@ -16,7 +16,7 @@ const transformer = {
     if (header.search(/from\s*['|"]riot['|"]/) == -1 &&
       header.search(/require\s*\(['|"]riot['|"]\)/)
     ) {
-      completed = 'const riot = require("riot")' + compiled;
+      completed = 'const riot = require("riot");\n' + compiled;
     }
     return completed;
   },
