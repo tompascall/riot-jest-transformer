@@ -76,4 +76,4 @@ You can play with importing and testing tags in the demo folder:
 
 Run tests with `npm test` or `npm run test:watch`. 
 
-The transformer is developed with tdd, so if you would like to contribute (you are really wellcomed :), please write your tests for your new functionality, and send pull request to integrate your changes.
+The transformer is developed with tdd, so if you would like to contribute (you are really welcomed :), please write your tests for your new functionality, and send pull request to integrate your changes.
