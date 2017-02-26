@@ -35,9 +35,9 @@ const transformer = {
     let config;
     if (fs.existsSync(CONFIG_PATH)) {
       config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
-      if (Array.isArray(config.args &&
+      if (Array.isArray(config.args) &&
         {}.toString.call(config.args[0]) == '[object Object]'
-      )) {
+      ) {
         config.args[0].filename = filename;
       }
       return config;

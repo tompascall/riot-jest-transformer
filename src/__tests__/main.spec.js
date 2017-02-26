@@ -62,10 +62,11 @@ describe('riot-jest-transformer', function() {
       let config = {
         transformer: "babel-core",
         method: 'transform',
-        args: [{filename: 'fakeFile'}, 'fakeArg']
+        args: [{}, 'fakeArg']
       };
 
       fs.writeFileSync(configPath, JSON.stringify(config), {encoding: 'utf8'});
+      config.args[0].filename = 'fakeFile';
       expect(transformer.getConfig({ filename: 'fakeFile'})).toEqual(config);
       fs.unlinkSync(configPath);
     });
