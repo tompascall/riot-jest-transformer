@@ -52,7 +52,7 @@ exports.process = function (source, filename) {
   let compiled = transformer.getCompiled(source);
   let completedWithRiot = transformer.insertRiot(compiled);
   const config = transformer.getConfig({ filename });
-  let transformed = transformer.getTransformed({ compiled: completedWithRiot, ...config });
+  let transformed = transformer.getTransformed(Object.assign({}, { compiled: completedWithRiot }, config));
   return transformed.code;
 }
 

@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "babel-core": "^6.23.1",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "riot": "^3.3.1"
   }
 }

@@ -138,11 +138,11 @@ describe('riot-jest-transformer', function() {
 
       spyOn(transformer, 'getTransformed').and.callThrough();
       process(hello, 'fakeFile');
-      expect(transformer.getTransformed).toHaveBeenCalledWith({ compiled: completedWithRiot, ...config});
+      expect(transformer.getTransformed).toHaveBeenCalledWith(Object.assign({}, { compiled: completedWithRiot }, config));
     });
 
     it('returns code attribute of transformed tag', () => {
-      transformed = transformer.getTransformed({ compiled: completedWithRiot, ...config});
+      transformed = transformer.getTransformed(Object.assign({}, { compiled: completedWithRiot }, config));
       expect(process(hello, 'fakeFile')).toEqual(transformed.code);
     });
   });
