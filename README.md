@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.org/tompascall/riot-jest-transformer.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/tompascall/riot-jest-transformer/badge.svg?branch=master)](https://coveralls.io/r/tompascall/riot-jest-transformer?branch=master)
+
 *Work In Progress...*
 
 ## riot-jest-transformer
