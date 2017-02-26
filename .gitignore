@@ -2,3 +2,7 @@ node_modules
 *.log
 *.swo
 *.swp
+.coveralls.yml
+coverage.data
+coverage
+.DS_Store

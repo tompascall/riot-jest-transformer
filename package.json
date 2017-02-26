@@ -5,6 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "test": "jest --config jest.config.js --no-cache",
+    "test:coverage": "jest --config jest.config.js --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:watch": "jest --watch --config jest.config.js --no-cache"
   },
   "repository": {
@@ -27,13 +28,14 @@
   },
   "homepage": "https://github.com/tompascall/riot-jest-transformer#readme",
   "devDependencies": {
-    "babel-core": "^6.23.1",
     "babel-jest": "^19.0.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2015-riot": "^1.1.0",
+    "coveralls": "^2.11.16",
     "jest": "^19.0.0"
   },
   "dependencies": {
+    "babel-core": "^6.23.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "riot": "^3.3.1"
   }
 }
