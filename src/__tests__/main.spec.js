@@ -142,6 +142,20 @@ describe('riot-jest-transformer', function() {
 
       expect(callValidateConfig).toThrow('If you want to use babel-core for transformation, you have to provide an object as first element of your args array');
     });
+
+    it('should not throw error if transformer is not babel-core and args[0] is not an object', () => {
+      let config = {
+        transformer: "abel-babel",
+        method: 'label',
+        args: ['kabel']
+      };
+
+      let callValidateConfig = () => {
+        transformer.validateConfig(config);
+      }
+
+      expect(callValidateConfig).not.toThrow();
+    });
   });
 
   describe('getTransformed', () => {
@@ -173,6 +187,48 @@ describe('riot-jest-transformer', function() {
       expect(result.split('____')[0]).toEqual('fake_lalala');
       expect(result.split('____')[1]).toEqual(compiled);
       fs.unlinkSync(path.resolve('node_modules/fakeNodeModule.js'));
+    });
+
+    // **************
+    it('should throw informative error message if transformer module cannot be required', () => {
+      let compiled = transformer.getCompiled(hello);
+      let fakeNodeModule2 = `
+      exports.fakeFormer = 'not_a_function';
+      `
+
+      fs.writeFileSync(path.resolve('node_modules/fakeNodeModule2.js'), fakeNodeModule2, {encoding: 'utf8'});
+      let result;
+      const config = {
+        compiled,
+        transformer: 'not_existent_module',
+        method: 'fakeFormer',
+      };
+      const callGetTransformed = () => {
+        result = transformer.getTransformed(config);
+      };
+
+      expect(callGetTransformed).toThrow(`The ${config.transformer} transformer module in your riot-jest-transformer config cannot be required (it might not have been installed or it has a wrong path in config)`);
+      fs.unlinkSync(path.resolve('node_modules/fakeNodeModule2.js'));
+    });
+
+    it('should throw informative error message if method is not a function', () => {
+      let compiled = transformer.getCompiled(hello);
+      let fakeNodeModule3 = `
+      exports.fakeFormer = 'not_a_function';
+      `
+
+      fs.writeFileSync(path.resolve('node_modules/fakeNodeModule3.js'), fakeNodeModule3, {encoding: 'utf8'});
+      let result;
+      const callGetTransformed = () => {
+        result = transformer.getTransformed({
+          compiled,
+          transformer: 'fakeNodeModule3',
+          method: 'fakeFormer',
+        });
+      };
+
+      expect(callGetTransformed).toThrow('You should provide a function of transformer as "method" in your riot-jest-transformer config');
+      fs.unlinkSync(path.resolve('node_modules/fakeNodeModule3.js'));
     });
   });
 

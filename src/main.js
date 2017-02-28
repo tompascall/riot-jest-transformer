@@ -75,8 +75,18 @@ const transformer = {
 
   getTransformed ({ compiled, transformer, method, args = [] } = {}) {
     if (transformer && method) {
-      const transformerByParam = require(transformer);
-      return transformerByParam[method](compiled, ...args);
+      let transformerByParam;
+      try {
+        transformerByParam = require(transformer);
+      }
+      catch (e) {
+        throw Error(`The ${transformer} transformer module in your riot-jest-transformer config cannot be required (it might not have been installed or it has a wrong path in config)`);
+      }
+      const methodFunction = transformerByParam[method];
+      if (typeof methodFunction !== 'function') {
+        throw Error('You should provide a function of transformer as "method" in your riot-jest-transformer config');
+      }
+      return methodFunction(compiled, ...args);
     }
     return transform(compiled, ...args);
   }
