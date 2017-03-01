@@ -10,7 +10,7 @@ const hello = `
     </hello>
 `;
 
-const configPath = `${path.resolve('.riot-jest-transformer')}`;
+const configPath = `${path.resolve('riot-jest-transformer.json')}`;
 
 describe('riot-jest-transformer', function() {
 
@@ -20,7 +20,7 @@ describe('riot-jest-transformer', function() {
     });
   });
 
-  describe('isertRiot', () => {
+  describe('insertRiot', () => {
     it('should insert riot dependency into compiled tag', () => {
       const hello2 = `
           import { someMethod } from 'someModule';
@@ -58,7 +58,7 @@ describe('riot-jest-transformer', function() {
       expect(config).toEqual(transformer.getDefaultConfig({ filename: 'fakeFile' }));
     });
 
-    it('should use .riot-jest-transformer file as config if it exists', () => {
+    it('should use riot-jest-transformer.json file as config if it exists', () => {
       let config = {
         transformer: "babel-core",
         method: 'transform',
@@ -69,6 +69,92 @@ describe('riot-jest-transformer', function() {
       config.args[0].filename = 'fakeFile';
       expect(transformer.getConfig({ filename: 'fakeFile'})).toEqual(config);
       fs.unlinkSync(configPath);
+    });
+
+    it('should throw informative error message if conf file is not in json format', () => {
+      let config = `{
+        transformer: "babel-core",
+        method: 'transform',
+        args: [{}]
+      }`;
+
+      fs.writeFileSync(configPath, config, {encoding: 'utf8'});
+      let callGetConfig = () => {
+        transformer.getConfig({ filename: 'fakeFile' });
+      }
+
+      expect(callGetConfig).toThrow('The content of the config file must be in JSON format');
+      fs.unlinkSync(configPath);
+    });
+  });
+
+  describe('validateConfig', function() {
+    const callValidateConfig = () => {
+      transformer.validateConfig(config);
+    };
+    let config;
+    
+    it('should check type of config object', () => {
+      config = [];   
+      expect(callValidateConfig).toThrow('riot-jest-transformer config must provide an object');
+    });
+
+    it('should check existence of compulsory config options', () => {
+      config = {}; 
+      expect(callValidateConfig).toThrow('riot-jest-transformer config must define the name or path of the "transformer" module, the "method" of the transformer to be called, and optionally "args" ie. arguments of the method');
+    });
+
+    it('should check type of transformer and method', () => {
+      config = {
+        transformer: {},
+        method: []
+      };
+
+      expect(callValidateConfig).toThrow('"transformer" and "method" in riot-jest-transformer config must be string');
+    });
+
+    it('should check type of args', () => {
+      config = {
+        transformer: 'fakeModule',
+        method: 'fakeMethod',
+        args: 'arg1, arg2'
+      };
+
+      expect(callValidateConfig).toThrow('If you define "args" in riot-jest-transformer config, it must be an array of arguments');
+    });
+
+      // {
+      //   transformer: "babel-core",
+      //   method: 'transform',
+      //   args: ["trallala"]
+      // };
+
+    it('should throw informative error message if transformer is babel-core and args[0] in conf is not an object', () => {
+      let config = {
+        transformer: "babel-core",
+        method: 'transform',
+        args: ["trallala"]
+      };
+
+      let callValidateConfig = () => {
+        transformer.validateConfig(config);
+      }
+
+      expect(callValidateConfig).toThrow('If you want to use babel-core for transformation, you have to provide an object as first element of your args array');
+    });
+
+    it('should not throw error if transformer is not babel-core and args[0] is not an object', () => {
+      let config = {
+        transformer: "abel-babel",
+        method: 'label',
+        args: ['kabel']
+      };
+
+      let callValidateConfig = () => {
+        transformer.validateConfig(config);
+      }
+
+      expect(callValidateConfig).not.toThrow();
     });
   });
 
@@ -101,6 +187,48 @@ describe('riot-jest-transformer', function() {
       expect(result.split('____')[0]).toEqual('fake_lalala');
       expect(result.split('____')[1]).toEqual(compiled);
       fs.unlinkSync(path.resolve('node_modules/fakeNodeModule.js'));
+    });
+
+    // **************
+    it('should throw informative error message if transformer module cannot be required', () => {
+      let compiled = transformer.getCompiled(hello);
+      let fakeNodeModule2 = `
+      exports.fakeFormer = 'not_a_function';
+      `
+
+      fs.writeFileSync(path.resolve('node_modules/fakeNodeModule2.js'), fakeNodeModule2, {encoding: 'utf8'});
+      let result;
+      const config = {
+        compiled,
+        transformer: 'not_existent_module',
+        method: 'fakeFormer',
+      };
+      const callGetTransformed = () => {
+        result = transformer.getTransformed(config);
+      };
+
+      expect(callGetTransformed).toThrow(`The ${config.transformer} transformer module in your riot-jest-transformer config cannot be required (it might not have been installed or it has a wrong path in config)`);
+      fs.unlinkSync(path.resolve('node_modules/fakeNodeModule2.js'));
+    });
+
+    it('should throw informative error message if method is not a function', () => {
+      let compiled = transformer.getCompiled(hello);
+      let fakeNodeModule3 = `
+      exports.fakeFormer = 'not_a_function';
+      `
+
+      fs.writeFileSync(path.resolve('node_modules/fakeNodeModule3.js'), fakeNodeModule3, {encoding: 'utf8'});
+      let result;
+      const callGetTransformed = () => {
+        result = transformer.getTransformed({
+          compiled,
+          transformer: 'fakeNodeModule3',
+          method: 'fakeFormer',
+        });
+      };
+
+      expect(callGetTransformed).toThrow('You should provide a function of transformer as "method" in your riot-jest-transformer config');
+      fs.unlinkSync(path.resolve('node_modules/fakeNodeModule3.js'));
     });
   });
 
