@@ -26,6 +26,8 @@ riot-jest-transformer must be used in your Jest config file like this:
 }
 ```
 
+Let's suppose that you saved the Jest config file to the project root directory as `jest.config`. In this case you should run jest with --config option: `jest --config jest.config`
+
 #### Usage
 
 Just import your tag into the Jest test file. After that you can mount your tag to an html element. For example:
