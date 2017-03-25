@@ -14,7 +14,7 @@ const transformer = {
     let completed;
     const [ header, tag ] = compiled.split(RIOT_PROCESSOR);
     if (header.search(/from\s*['|"]riot['|"]/) == -1 &&
-      header.search(/require\s*\(['|"]riot['|"]\)/)
+      header.search(/require\s*\(['|"]riot['|"]\)/) == -1
     ) {
       completed = 'const riot = require("riot");\n' + compiled;
     }
