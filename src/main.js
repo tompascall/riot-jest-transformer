@@ -1,5 +1,5 @@
 const riot = require('riot');
-const { transform } = require('babel-core');
+const { transform } = require('@babel/core');
 const path = require('path');
 const fs = require('fs');
 const CONFIG_PATH = `${path.resolve('riot-jest-transformer.json')}`;
@@ -23,7 +23,7 @@ const transformer = {
 
   getDefaultConfig ({ filename } = {}) {
     return {
-      transformer: 'babel-core',
+      transformer: '@babel/core',
       method: 'transform',
       args: [{
         filename
@@ -36,7 +36,7 @@ const transformer = {
     if (fs.existsSync(CONFIG_PATH)) {
       try {
         config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
-      } 
+      }
       catch (e) {
         throw Error("The content of the config file must be in JSON format");
       }
@@ -68,8 +68,8 @@ const transformer = {
       throw Error('If you define "args" in riot-jest-transformer config, it must be an array of arguments');
     }
 
-      if (config.transformer === 'babel-core' && {}.toString.call(config.args[0]) !== '[object Object]') {
-        throw Error("If you want to use babel-core for transformation, you have to provide an object as first element of your args array");
+      if (config.transformer === '@babel/core' && {}.toString.call(config.args[0]) !== '[object Object]') {
+        throw Error("If you want to use @babel/core for transformation, you have to provide an object as first element of your args array");
       }
   },
 

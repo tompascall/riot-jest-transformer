@@ -1,9 +1,9 @@
 {
-  "transformer": "babel-core",
+  "transformer": "@babel/core",
   "method": "transform",
   "args": [
     {
         "auxiliaryCommentBefore": "fakeComment"
     }
   ]
-} 
+}

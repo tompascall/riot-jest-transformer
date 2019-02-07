@@ -1,6 +1,6 @@
 {
   "name": "demo",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "demo for riot-jest-transformer",
   "scripts": {
     "test": "jest --config jest.config.js --no-cache"
@@ -11,8 +11,11 @@
   "author": "tompascall",
   "license": "ISC",
   "dependencies": {
-    "babel-jest": "^19.0.0",
-    "jest": "^19.0.2",
+    "babel-jest": "^24.1.0",
+    "jest": "^24.1.0",
     "riot-jest-transformer": "^1.0.2"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2"
   }
 }
