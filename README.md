@@ -11,7 +11,7 @@ This transformer helps you to use [Jest](https://facebook.github.io/jest/) testi
 - Nodejs >= 6.9
 - Installed Jest package (`npm i --save-dev jest babel-jest`)
 - Installed riot-jest-transformer npm package into your project: `npm i --save-dev riot-jest-transformer`
-- If you use Babel, set up `.babelrc` file correctly (for more see [Jest docs](https://facebook.github.io/jest/docs/getting-started.html#additional-configuration)). Don't forget setting `presets` for new javascript features.
+- If you use Babel, set up `.babelrc` file correctly (for more see [Jest docs](https://facebook.github.io/jest/docs/getting-started.html#additional-configuration)). Don't forget setting `presets` for new javascript features. `babel-jest` does not seem to be able to pick up `babel.config.js` files, so please prefer `.babelrc`.
 
 #### Setting up Jest config file
 
