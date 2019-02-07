@@ -1,6 +1,6 @@
 import { process, transformer } from '../main';
 import * as riot from 'riot';
-import { transform } from 'babel-core';
+import { transform } from '@babel/core';
 import path from 'path';
 import fs from 'fs';
 
@@ -38,14 +38,14 @@ describe('riot-jest-transformer', function() {
   describe('getDefaultConfig', () => {
     it('should use babel transformer optioned with filename', () => {
       const config = transformer.getDefaultConfig({ filename: 'fakeFile'});
-      expect(config.transformer).toEqual('babel-core');
+      expect(config.transformer).toEqual('@babel/core');
       expect(config.method).toEqual('transform');
       expect(config.args).toEqual([{ filename: 'fakeFile' }]);
     });
   });
 
   describe('getConfig', () => {
-    it('should use babel-core as default transformer if no config file', () => {
+    it('should use @babel/core as default transformer if no config file', () => {
       const callGetConfig = function () {
         transformer.getConfig()
       };
@@ -60,7 +60,7 @@ describe('riot-jest-transformer', function() {
 
     it('should use riot-jest-transformer.json file as config if it exists', () => {
       let config = {
-        transformer: "babel-core",
+        transformer: "@babel/core",
         method: 'transform',
         args: [{}, 'fakeArg']
       };
@@ -73,7 +73,7 @@ describe('riot-jest-transformer', function() {
 
     it('should throw informative error message if conf file is not in json format', () => {
       let config = `{
-        transformer: "babel-core",
+        transformer: "@babel/core",
         method: 'transform',
         args: [{}]
       }`;
@@ -93,14 +93,14 @@ describe('riot-jest-transformer', function() {
       transformer.validateConfig(config);
     };
     let config;
-    
+
     it('should check type of config object', () => {
-      config = [];   
+      config = [];
       expect(callValidateConfig).toThrow('riot-jest-transformer config must provide an object');
     });
 
     it('should check existence of compulsory config options', () => {
-      config = {}; 
+      config = {};
       expect(callValidateConfig).toThrow('riot-jest-transformer config must define the name or path of the "transformer" module, the "method" of the transformer to be called, and optionally "args" ie. arguments of the method');
     });
 
@@ -124,14 +124,14 @@ describe('riot-jest-transformer', function() {
     });
 
       // {
-      //   transformer: "babel-core",
+      //   transformer: "@babel/core",
       //   method: 'transform',
       //   args: ["trallala"]
       // };
 
-    it('should throw informative error message if transformer is babel-core and args[0] in conf is not an object', () => {
+    it('should throw informative error message if transformer is @babel/core and args[0] in conf is not an object', () => {
       let config = {
-        transformer: "babel-core",
+        transformer: "@babel/core",
         method: 'transform',
         args: ["trallala"]
       };
@@ -140,10 +140,10 @@ describe('riot-jest-transformer', function() {
         transformer.validateConfig(config);
       }
 
-      expect(callValidateConfig).toThrow('If you want to use babel-core for transformation, you have to provide an object as first element of your args array');
+      expect(callValidateConfig).toThrow('If you want to use @babel/core for transformation, you have to provide an object as first element of your args array');
     });
 
-    it('should not throw error if transformer is not babel-core and args[0] is not an object', () => {
+    it('should not throw error if transformer is not @babel/core and args[0] is not an object', () => {
       let config = {
         transformer: "abel-babel",
         method: 'label',
@@ -160,7 +160,7 @@ describe('riot-jest-transformer', function() {
 
   describe('getTransformed', () => {
 
-    it('uses babel-core transform if config does not exist', () => {
+    it('uses @babel/core transform if config does not exist', () => {
       if (fs.existsSync(configPath)) {
         fs.unlinkSync(configPath);
       }
@@ -276,4 +276,3 @@ describe('riot-jest-transformer', function() {
     });
   });
 });
-
