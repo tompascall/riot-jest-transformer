@@ -1,11 +1,3 @@
 <hello>
-    <h1>{ opts.name }</h1>
-
-    <script>
-        import {foo} from "./foo";
-
-        this.on("mount", () => {
-            console.log("mounted " + foo);
-        });
-    </script>
+    <h1>{ props.name }</h1>
 </hello>

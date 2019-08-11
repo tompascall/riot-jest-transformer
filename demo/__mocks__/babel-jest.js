@@ -1,0 +1,1 @@
+exports.process = jest.fn();
