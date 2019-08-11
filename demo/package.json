@@ -13,6 +13,7 @@
   "dependencies": {
     "babel-jest": "^24.1.0",
     "jest": "^24.1.0",
+    "riot": "^4.3.8",
     "riot-jest-transformer": "^1.0.2"
   },
   "devDependencies": {

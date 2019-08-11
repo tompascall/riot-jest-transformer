@@ -17,6 +17,8 @@ describe('hello', () => {
       });
 
       document.body.appendChild(elem)
+
+      riot.register('hello', hello);
       riot.mount(elem, 'hello');
   });
 
