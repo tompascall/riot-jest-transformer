@@ -26,7 +26,60 @@ riot-jest-transformer must be used in your Jest config file like this:
 }
 ```
 
-Let's suppose that you saved the Jest config file to the project root directory as `jest.config`. In this case you should run jest with --config option: `jest --config jest.config`
+If you use [Riot pre-processors](https://riot.js.org/compiler/#pre-processors), you can provide config options for riot-jest-transformer to register pre-processors befor compiling your tags for your tests. In this case you should use the module format for jest configuration (i.e. exporting your configuration object as a module from jest.config.js) using the following scheme:
+
+```js
+{
+    "transform": {
+        "^.+\\.jsx?$": "babel-jest",
+        "^.+\\.tag$": ["riot-jest-transformer", {
+          registrations: [{
+            type: 'css' | 'template' | 'javascript',
+            name: string,
+            registrationCb: (code: string, { options }) => {
+                /**  
+                * pre-process code using your  
+                * favorite preprocessor, and finally  
+                * return the pre-processed code and  
+                * sourcemap
+                **/
+            }: { code: string, map: null | sourcemap }
+        }]
+    }
+}
+```
+
+For example using `node-sass` for pre-processing `.scss` files, you can define the following config:
+
+```js
+// jest.config.js
+
+const sass = require('node-sass');
+
+module.exports = {
+    transform: {
+        "^.+\\.riot$": ["riot-jest-transformer", {
+            registrations: [{
+                type: 'css',
+                name: 'scss',
+                registrationCb: function(code, { options }) {
+                    const { file } = options;
+                    console.log('Compile the sass code in', file);
+                    const {css} = sass.renderSync({
+                      data: code
+                    });
+                    return {
+                      code: css.toString(),
+                      map: null
+                    }
+                }
+            }]
+        }],
+        "^.+\\.jsx?$": "babel-jest"
+    },
+};
+
+```
 
 #### Usage
 
