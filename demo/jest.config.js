@@ -6,7 +6,7 @@ module.exports = {
             registrations: [{
                 type: 'css',
                 name: 'scss',
-                preprocessorModulePath: "./riot-scss-preprocessor"
+                preprocessorModulePath: "riot-scss-preprocessor"
             }]
         }],
         "^.+\\.jsx?$": "babel-jest",

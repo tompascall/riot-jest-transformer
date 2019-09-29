@@ -1,5 +1,4 @@
 const sass = require('node-sass');
-const { registerPreprocessor } = require('@riotjs/compiler');
 
 module.exports = function riotScssPreprocessor(code, { options }) {
     const { file } = options;
