@@ -12,9 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "babel-jest": "^24.1.0",
-    "jest": "^24.1.0",
-    "riot": "^4.3.8",
-    "riot-jest-transformer": "^1.0.2"
+    "jest": "^24.9.0",
+    "node-sass": "^4.12.0",
+    "riot": "^4.5.0",
+    "riot-jest-transformer": "^4.1.0"
   },
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2"
