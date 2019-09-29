@@ -26,7 +26,7 @@ riot-jest-transformer must be used in your Jest config file like this:
 }
 ```
 
-If you use [Riot pre-processors](https://riot.js.org/compiler/#pre-processors), you can provide config options for riot-jest-transformer to register pre-processors befor compiling your tags for your tests. In this case you should use the module format for jest configuration (i.e. exporting your configuration object as a module from jest.config.js) using the following scheme:
+If you use [Riot pre-processors](https://riot.js.org/compiler/#pre-processors), you can provide config options for riot-jest-transformer to register pre-processors befor compiling your tags for your tests. In this case you should use the following scheme:
 
 ```js
 {
@@ -34,27 +34,39 @@ If you use [Riot pre-processors](https://riot.js.org/compiler/#pre-processors), 
         "^.+\\.jsx?$": "babel-jest",
         "^.+\\.tag$": ["riot-jest-transformer", {
           registrations: [{
-            type: 'css' | 'template' | 'javascript',
+            type: "css" | "template" | "javascript",
             name: string,
-            registrationCb: (code: string, { options }) => {
-                /**  
-                * pre-process code using your  
-                * favorite preprocessor, and finally  
-                * return the pre-processed code and  
-                * sourcemap
-                **/
-            }: { code: string, map: null | sourcemap }
+            preprocessorModulePath: string
         }]
     }
 }
 ```
 
-For example using `node-sass` for pre-processing `.scss` files, you can define the following config:
+**preprocessorModulePath** must be defined as a relative path (based on Jest `rootDir` configuration) to a module that exports your preprocessor function.
+
+For example if you use scss, you can define a preprocessor function like this:
+
+```js
+// riot-scss-preprocessor.js
+const sass = require('node-sass');
+
+module.exports = function riotScssPreprocessor(code, { options }) => {
+    const { file } = options;
+    console.log('Compile the sass code in', file);
+    const { css } = sass.renderSync({
+        data: code
+    });
+    return {
+        code: css.toString(),
+        map: null
+    };
+}
+```
+
+In the above case the jest config should be looked something like this:
 
 ```js
 // jest.config.js
-
-const sass = require('node-sass');
 
 module.exports = {
     transform: {
@@ -62,17 +74,7 @@ module.exports = {
             registrations: [{
                 type: 'css',
                 name: 'scss',
-                registrationCb: function(code, { options }) {
-                    const { file } = options;
-                    console.log('Compile the sass code in', file);
-                    const {css} = sass.renderSync({
-                      data: code
-                    });
-                    return {
-                      code: css.toString(),
-                      map: null
-                    }
-                }
+                preprocessorModulePath: 'riot-scss-preprocessor'
             }]
         }],
         "^.+\\.jsx?$": "babel-jest"
