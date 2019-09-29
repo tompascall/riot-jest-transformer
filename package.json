@@ -1,6 +1,6 @@
 {
   "name": "riot-jest-transformer",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "description": "Jest transformer for testing riot tags",
   "main": "src/main.js",
   "scripts": {
