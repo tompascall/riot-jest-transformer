@@ -1,4 +1,5 @@
 import {
+  getRjtConfig,
   getRegistrationOptions,
   getCacheOption,
   registerPreProcessors,
@@ -6,14 +7,43 @@ import {
 } from '../pre-processors';
 import mockScssPreprocessor from '../__mocks__/mock-scss-preprocessor';
 import { registerPreprocessor } from '@riotjs/compiler';
-import { TransformerConfig, RegistrationOptions, RiotPreprocessorType } from '../types';
+import {
+  TransformerConfig,
+  TransformConfig,
+  RegistrationOptions,
+  RiotPreprocessorType
+} from '../types';
 
 describe('Pre-processors', () => {
+  describe('getRjtConfig', () => {
+    it('should return undefined if no riot-jest-transformer config', () => {
+      // @ts-ignore: testing inappropriate transform config
+      expect(getRjtConfig(['pattern', 'other transformer'])).toBe(undefined);
+    });    
+
+    it('should return rjt config', () => {
+      const rjtConfig: TransformConfig = [
+        ['pattern', 'other transformer'],
+        ['pattern', 'riot-jest-transformer'],
+      ];
+      expect(getRjtConfig(rjtConfig)).toEqual(['pattern', 'riot-jest-transformer']);
+    });
+  });
+
   describe('getRegistrationOptions', () => {
     it('should be a function', () => {
       expect(typeof getRegistrationOptions).toBe('function');
     });
   
+    it('should return null if no array', () => {
+      const config = {
+        transform: {},
+        rootDir: ''
+      };
+      // @ts-ignore: testing inappropriate config
+      expect(getRegistrationOptions(config)).toBe(null);
+    });
+
     it('should return null if no options object \
       in riot-jest-transformer config', () => {
         const config: TransformerConfig = {
@@ -61,7 +91,13 @@ describe('Pre-processors', () => {
   });
 
   describe('getCacheOption', () => {
-    it('should return true if clearCache is not defined', () => {
+    it('should return false if config is not an array', () => {
+      const config = {};
+      // @ts-ignore: testing inappropriate config
+      expect(getCacheOption(config)).toBe(false);
+    });
+
+    it('should return false if clearCache is not defined', () => {
       const config: TransformerConfig = {
           transform: [
             ['filePattern1', 'modulePath'],

@@ -12,17 +12,17 @@ const RIOT_PREPROCESSOR_TYPES = ['template', 'css', 'javascript'];
 exports.getRegistrationOptions = (config) => {
     const { transform } = config;
     if (Array.isArray(transform)) {
-        const rjtConfig = getRjtConfig(transform);
+        const rjtConfig = exports.getRjtConfig(transform);
         const registrations = get_1.default(rjtConfig && rjtConfig[TRANSFORMER_OPTIONS], 'registrations', null);
         return registrations;
     }
     return null;
 };
-const getRjtConfig = (transform) => transform.find(entry => entry[TRANSFORMER_PATH].includes('riot-jest-transformer'));
+exports.getRjtConfig = (transform) => transform.find(entry => entry[TRANSFORMER_PATH].includes('riot-jest-transformer'));
 exports.getCacheOption = (config) => {
     const { transform } = config;
     if (Array.isArray(transform)) {
-        const rjtConfig = getRjtConfig(transform);
+        const rjtConfig = exports.getRjtConfig(transform);
         return get_1.default(rjtConfig && rjtConfig[TRANSFORMER_OPTIONS], 'clearCache', false);
     }
     return false;

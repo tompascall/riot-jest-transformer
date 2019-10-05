@@ -15,7 +15,7 @@
     "jest": "^24.9.0",
     "node-sass": "^4.12.0",
     "riot": "^4.5.0",
-    "riot-jest-transformer": "6.0.3"
+    "riot-jest-transformer": "^6.0.4"
   },
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2"

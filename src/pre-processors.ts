@@ -26,7 +26,7 @@ export const getRegistrationOptions = (config: TransformerConfig) => {
   return null;
 };
 
-const getRjtConfig = (transform: TransformConfig) =>
+export const getRjtConfig = (transform: TransformConfig) =>
   transform.find(entry =>
     entry[TRANSFORMER_PATH].includes('riot-jest-transformer')); 
 
