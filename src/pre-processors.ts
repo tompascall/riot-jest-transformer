@@ -1,33 +1,45 @@
-const get = require('lodash/get');
-const path = require('path');
-const { registerPreprocessor } = require('@riotjs/compiler');
+import get from 'lodash/get';
+import path from 'path';
+import { registerPreprocessor } from '@riotjs/compiler';
+import {
+  TransformConfig,
+  TransformerConfig,
+  RiotPreprocessorType,
+  RegistrationOptions
+} from './types';
 
 const TRANSFORMER_PATH = 1;
 const TRANSFORMER_OPTIONS = 2;
-const RIOT_PREPROCESSOR_TYPES = ['template', 'css', 'javascript'];
+const RIOT_PREPROCESSOR_TYPES: [
+  'template',
+  'css',
+  'javascript'
+] = ['template', 'css', 'javascript'];
 
-const getRegistrationOptions = (config) => {
+export const getRegistrationOptions = (config: TransformerConfig) => {
   const { transform } = config;
   if (Array.isArray(transform)) {
-    const rjtConfig = transform.find(entry =>
-      entry[TRANSFORMER_PATH].includes('riot-jest-transformer'));
-    const registrations = get(rjtConfig[TRANSFORMER_OPTIONS],'registrations', null);
+    const rjtConfig = getRjtConfig(transform); 
+    const registrations = get(rjtConfig && rjtConfig[TRANSFORMER_OPTIONS], 'registrations', null);
     return registrations;
   }
   return null;
 };
 
-const getCacheOption = (config) => {
+const getRjtConfig = (transform: TransformConfig) =>
+  transform.find(entry =>
+    entry[TRANSFORMER_PATH].includes('riot-jest-transformer')); 
+
+export const getCacheOption = (config: TransformerConfig) => {
   const { transform } = config;
   if (Array.isArray(transform)) {
-    const rjtConfig = transform.find(entry =>
-      entry[TRANSFORMER_PATH].includes('riot-jest-transformer'));
-    return get(rjtConfig[TRANSFORMER_OPTIONS], 'clearCache', false);
+    const rjtConfig = getRjtConfig(transform);
+    return get(rjtConfig && rjtConfig[TRANSFORMER_OPTIONS], 'clearCache', false);
   }
   return false;
 }
 
-const validateOptions = (registrationOptions) => {
+export const validateOptions = (registrationOptions: RegistrationOptions) => {
   if (!Array.isArray(registrationOptions)) {
     throw new Error('You should wrap registration options into an array');
   }
@@ -62,9 +74,9 @@ https://riot.js.org/compiler/#pre-processors');
   }
 };
 
-const tryRegistrations = (() => {
-  let registeredTypes = [];
-  return (registrationOptions, jestRootDir, clearCache) => {
+export const tryRegistrations = (() => {
+  let registeredTypes: RiotPreprocessorType[] = [];
+  return (registrationOptions: RegistrationOptions, jestRootDir: string, clearCache: boolean) => {
     validateOptions(registrationOptions);
     if (clearCache) { registeredTypes = [] }
     registrationOptions.forEach((option) => {
@@ -78,15 +90,10 @@ const tryRegistrations = (() => {
   };
 })();
 
-const registerPreProcessors = (config) => {
+export const registerPreProcessors = (config: TransformerConfig) => {
   const registrationOptions = getRegistrationOptions(config);
   const clearCache = getCacheOption(config);
   if (registrationOptions) {
     tryRegistrations(registrationOptions, config.rootDir, clearCache);
   }
 };
-
-exports.getRegistrationOptions = getRegistrationOptions;
-exports.getCacheOption = getCacheOption;
-exports.tryRegistrations = tryRegistrations;
-exports.registerPreProcessors = registerPreProcessors;

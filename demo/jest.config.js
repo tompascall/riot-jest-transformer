@@ -2,7 +2,7 @@ module.exports = {
     "verbose": true,
     "automock": false,
     "transform": {
-        "^.+\\.tag$": ["../src/main", {
+        "^.+\\.tag$": ["riot-jest-transformer", {
             registrations: [{
                 type: 'css',
                 name: 'scss',
