@@ -1,17 +1,17 @@
 {
   "name": "riot-jest-transformer",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Jest transformer for testing riot tags",
   "main": "build/main.js",
   "scripts": {
-    "build": " npm run clearBuild && npm run build-ts && npm run cleanBuild",
+    "build": " npm run clearBuild && npm run build-ts",
     "build-ts": "tsc",
     "watch": "tsc -w",
     "test": "jest --config jest.config.js --no-cache",
     "test:coverage": "jest --config jest.config.js --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:watch": "jest --watch --config jest.config.js --no-cache",
-    "clearBuild": "rm -r ./build",
-    "cleanBuild": "rm -r ./build/__tests__ ./build/__mocks__",
+    "clearBuild": "rm -rf ./build",
+    "cleanBuild": "rm -rf ./build/__tests__ ./build/__mocks__",
     "prepublishOnly": "npm run test && npm run build"
   },
   "repository": {
