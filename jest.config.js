@@ -4,6 +4,6 @@ module.exports = {
     "transform": {
         "^.+\\.[jt]s?$": "babel-jest"
     },
-    "testPathIgnorePatterns": ["/node_modules/", "/demo/", "/build/"],
+    "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/demo/", "<rootDir>/build/"],
     "modulePathIgnorePatterns": ["/build/"]
 };
