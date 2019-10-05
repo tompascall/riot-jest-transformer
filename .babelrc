@@ -1,3 +1,32 @@
 {
-    "plugins": ["transform-es2015-modules-commonjs"]
+    "presets": [
+        [
+            "@babel/env",
+            {
+                "targets": {
+                    "node": "8"
+                }
+            }
+        ],
+        [
+            "@babel/typescript",
+            {
+                "allExtensions": true
+            }
+        ]
+    ],
+    "plugins": [
+        "transform-es2015-modules-commonjs",
+        [
+            "babel-plugin-transform-require-ignore",
+            {
+                "extensions": [
+                    ".scss",
+                    ".css"
+                ]
+            }
+        ],
+        "@babel/plugin-proposal-class-properties",
+        "@babel/proposal-object-rest-spread"
+    ]
 }

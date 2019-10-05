@@ -4,9 +4,9 @@ import {
   registerPreProcessors,
   tryRegistrations,
 } from '../pre-processors';
-import mockScssPreprocessor from 'mock-scss-preprocessor';
-
+import mockScssPreprocessor from '../__mocks__/mock-scss-preprocessor';
 import { registerPreprocessor } from '@riotjs/compiler';
+import { TransformerConfig, RegistrationOptions, RiotPreprocessorType } from '../types';
 
 describe('Pre-processors', () => {
   describe('getRegistrationOptions', () => {
@@ -16,44 +16,45 @@ describe('Pre-processors', () => {
   
     it('should return null if no options object \
       in riot-jest-transformer config', () => {
-        const config = {
+        const config: TransformerConfig = {
           transform: [
             ['filePattern1', 'modulePath'],
-            [
-              'riot-jest-transformer-pattern',
-              'some/riot-jest-transformer/path',
-            ]
-          ]
+            ['riot-tag-pattern', 'some/riot-jest-transformer/path']
+          ],
+          rootDir: ''
         };
         expect(getRegistrationOptions(config)).toBe(null);
     });
 
     it('should return null if there is no registrations \
       in options object', () => {
-        const config = {
+        const config: TransformerConfig = {
           transform: [
             ['filePattern1', 'modulePath'],
-            [
-              'riot-jest-transformer-pattern',
-              'some/riot-jest-transformer/path',
+            ['riot-tag-pattern', 'some/riot-jest-transformer/path',
+              // @ts-ignore: testing inappropriate options
               { foo: 'bar' }
             ],
-          ]
+          ],
+          rootDir: ''
         };
         expect(getRegistrationOptions(config)).toBe(null);
-    });
+    })
 
     it('should return registrationOptions', () => {
-      const regOpts = [{}, {}];  
-      const config = {
+      const regOpts: RegistrationOptions = [{
+        type: 'css',
+        name: 'anything',
+        preprocessorModulePath: ''
+       }];  
+      const config: TransformerConfig = {
           transform: [
-            ['filePattern1', 'modulePath'],
-            [
-              'riot-jest-transformer-pattern',
-              'some/riot-jest-transformer/path',
-              { registrations: regOpts }
-            ],
-          ]
+           ['filePattern1', 'modulePath'],
+           ['riot-tag-pattern', 'some/riot-jest-transformer/path',
+            { registrations: regOpts }
+           ]
+          ],
+          rootDir: ''
         };
         expect(getRegistrationOptions(config)).toBe(regOpts);
     });
@@ -61,27 +62,38 @@ describe('Pre-processors', () => {
 
   describe('getCacheOption', () => {
     it('should return true if clearCache is not defined', () => {
-      const config = {
+      const config: TransformerConfig = {
           transform: [
-            [
-              'riot-jest-transformer-pattern',
-              'some/riot-jest-transformer/path',
-              {}
-            ],
-          ]
+            ['filePattern1', 'modulePath'],
+            ['riot-tag-pattern', 'some/riot-jest-transformer/path',
+              { registrations: [{
+                  type: 'css',
+                  name: 'scss',
+                  preprocessorModulePath: "riot-scss-preprocessor"
+                }]
+              }
+            ]
+          ],
+          rootDir: ''
         };
         expect(getCacheOption(config)).toBe(false);
     });
 
     it('should return true', () => {
-      const config = {
+      const config: TransformerConfig = {
           transform: [
-            [
-              'riot-jest-transformer-pattern',
-              'some/riot-jest-transformer/path',
-              { clearCache: true }
-            ],
-          ]
+            ['filePattern1', 'modulePath'],
+            ['riot-tag-pattern', 'some/riot-jest-transformer/path',
+              { registrations: [{
+                  type: 'css',
+                  name: 'scss',
+                  preprocessorModulePath: "riot-scss-preprocessor"
+                }],
+                clearCache: true
+              }
+            ]
+          ],
+          rootDir: ''
         };
         expect(getCacheOption(config)).toBe(true);
     });
@@ -93,28 +105,36 @@ describe('Pre-processors', () => {
     describe('Options validation', () => {
       it('should throw error if registration options are \
         not wrapped in an array', () => {
+        // @ts-ignore: testing wrong arguments
         expect(() => tryRegistrations()).toThrow();
       });
 
       it('should throw error if registration options \
         are not objects', () => {
+        // @ts-ignore: testing wrong arguments
         expect(() => tryRegistrations([[{}]])).toThrow();
+        // @ts-ignore: testing wrong arguments
         expect(() => tryRegistrations([{}, 'something else'])).toThrow();
       });
 
       it('should throw error if registration options \
         do not have type: "template" | "css" | "javascript"', () => {
+        // @ts-ignore: testing wrong arguments
         expect(() => tryRegistrations([{}])).toThrow();
+        // @ts-ignore: testing wrong arguments
         expect(() => tryRegistrations([{ foo: 'bar' }])).toThrow();
+        // @ts-ignore: testing wrong arguments
         expect(() => tryRegistrations([{ type: 'foo' }])).toThrow();
       });
 
       it('should throw error if registration options \
         do not have name (string)', () => {
         expect(() =>
+          // @ts-ignore: testing wrong arguments
           tryRegistrations([{ type: 'template'}]))
             .toThrow();
         expect(() =>
+          // @ts-ignore: testing wrong arguments
           tryRegistrations([{ type: 'template', name: {} }]))
             .toThrow();
       });
@@ -122,14 +142,17 @@ describe('Pre-processors', () => {
       it('should throw error if registration options \
         do not have preprocessorModulePath as string', () => {
           expect(() =>
+          // @ts-ignore: testing wrong arguments
           tryRegistrations([{
             type: 'template',
             name: 'foo' }], jestRootDir))
             .toThrow();
         expect(() =>
+          // @ts-ignore: testing wrong arguments
           tryRegistrations([{
-            type: 'template',
+            type: 'template' as RiotPreprocessorType,
             name: 'foo',
+          // @ts-ignore: testing wrong arguments
             preprocessorModulePath: {}
           }], jestRootDir, true))
             .toThrow();
@@ -151,19 +174,19 @@ describe('Pre-processors', () => {
       })
     
       it('should call registerPreprocessor for all registrations', () => {
-        const options = {
+        const options: RegistrationOptions = [{
           type: 'css',
           name: 'foo',
           preprocessorModulePath: 'mock-scss-preprocessor'
-        };
+        }] as RegistrationOptions;
 
-        tryRegistrations([options], jestRootDir, true);
+        tryRegistrations(options, jestRootDir, true);
         expect(registerPreprocessor).toBeCalledTimes(1);
         expect(registerPreprocessor)
           .toHaveBeenCalledWith(
-            options.type,
-            options.name,
-            mockScssPreprocessor
+            options[0].type,
+            options[0].name,
+            { default: mockScssPreprocessor }
           );
       });
     });
@@ -174,20 +197,20 @@ describe('Pre-processors', () => {
       })
     
       it('should get options and call registerPreprocessor', () => {
-        const options = [{
+        const options: RegistrationOptions = [{
           type: 'template',
           name: 'foo',
           preprocessorModulePath: 'mock-scss-preprocessor'
         }];
 
-        const config = {
+        const config: TransformerConfig = {
           transform: [
             ['filePattern1', 'modulePath'],
             [
               'riot-tag-pattern',
               'riot-jest-transformer',
               { registrations: options, clearCache: true }
-            ],
+            ]
           ],
           rootDir: ''
         };
@@ -198,11 +221,11 @@ describe('Pre-processors', () => {
           .toHaveBeenCalledWith(
             options[0].type,
             options[0].name,
-            mockScssPreprocessor
+            { default: mockScssPreprocessor }
           );
       });
 
-      it('should call registerPreprocessor only once fro the same type', () => {
+      it('should call registerPreprocessor only once for the same type', () => {
         const options = [{
           type: 'css',
           name: 'foo',
@@ -213,13 +236,13 @@ describe('Pre-processors', () => {
           preprocessorModulePath: 'mock-to-another-scss-preprocessor'
         }];
 
-        const config = {
+        const config: TransformerConfig = {
           transform: [
             ['filePattern1', 'modulePath'],
             [
               'riot-tag-pattern',
               'riot-jest-transformer',
-              { registrations: options, clearCache: true }
+              { registrations: options as RegistrationOptions, clearCache: true }
             ],
           ],
           rootDir: ''
@@ -231,7 +254,7 @@ describe('Pre-processors', () => {
           .toHaveBeenCalledWith(
             options[0].type,
             options[0].name,
-            mockScssPreprocessor
+            { default: mockScssPreprocessor }
           );
       });
     });

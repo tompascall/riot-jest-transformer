@@ -2,11 +2,17 @@
   "name": "riot-jest-transformer",
   "version": "5.0.0",
   "description": "Jest transformer for testing riot tags",
-  "main": "src/main.js",
+  "main": "build/main.js",
   "scripts": {
+    "build": " npm run clearBuild && npm run build-ts && npm run cleanBuild",
+    "build-ts": "tsc",
+    "watch": "tsc -w",
     "test": "jest --config jest.config.js --no-cache",
     "test:coverage": "jest --config jest.config.js --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "test:watch": "jest --watch --config jest.config.js --no-cache"
+    "test:watch": "jest --watch --config jest.config.js --no-cache",
+    "clearBuild": "rm -r ./build",
+    "cleanBuild": "rm -r ./build/__tests__ ./build/__mocks__",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
@@ -28,10 +34,19 @@
   },
   "homepage": "https://github.com/tompascall/riot-jest-transformer#readme",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-typescript": "^7.6.0",
+    "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.141",
+    "@types/node": "^12.7.8",
     "babel-jest": "^24.1.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-plugin-transform-require-ignore": "^0.1.1",
     "coveralls": "^2.11.16",
-    "jest": "^24.1.0"
+    "jest": "^24.1.0",
+    "typescript": "^3.6.3"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",

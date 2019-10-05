@@ -2,7 +2,8 @@ module.exports = {
     "verbose": true,
     "automock": false,
     "transform": {
-        "^.+\\.jsx?$": "babel-jest"
+        "^.+\\.[jt]s?$": "babel-jest"
     },
-    "testPathIgnorePatterns": ["/node_modules/", "/demo/"]
+    "testPathIgnorePatterns": ["/node_modules/", "/demo/", "/build/"],
+    "modulePathIgnorePatterns": ["/build/"]
 };
