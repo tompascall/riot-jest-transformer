@@ -7,3 +7,4 @@ coverage.data
 coverage
 .DS_Store
 .vscode
+demo/package-lock.json
