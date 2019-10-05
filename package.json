@@ -4,7 +4,7 @@
   "description": "Jest transformer for testing riot tags",
   "main": "build/main.js",
   "scripts": {
-    "build": " npm run clearBuild && npm run build-ts",
+    "build": " npm run clearBuild && npm run build-ts && npm run cleanBuild",
     "build-ts": "tsc",
     "watch": "tsc -w",
     "test": "jest --config jest.config.js --no-cache",
